@@ -1,4 +1,5 @@
 import turtle
+import time
 
 #Window
 width=800 #1600 #800
@@ -114,6 +115,8 @@ def paddle_functions():
     paddle_a_bounce()
     paddle_b_bounce()
 
+
+
 #Main loop
 while True:
     wn.update()
@@ -146,3 +149,20 @@ while True:
 
     #Paddles
     paddle_functions()
+
+    #Score
+    if score_a > 4:
+        paddle_a.goto(-place_x, 0)
+        paddle_b.goto(place_x, 0)
+        pen.goto(0, buffer_value)
+        pen.write(("Player A wins!"), align="center", font=("Courier", 24, "normal"))
+        time.sleep(5)
+        break
+
+    if score_b > 4:
+        paddle_a.goto(-place_x, 0)
+        paddle_b.goto(place_x, 0)
+        pen.goto(0, buffer_value)
+        pen.write(("Player B wins!"), align="center", font=("Courier", 24, "normal"))
+        time.sleep(5)
+        break
