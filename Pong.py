@@ -1,8 +1,8 @@
 import turtle
 
 #Window
-width=1600 #800
-height=1200 #600
+width=800 #1600 #800
+height=600 #1200 #600
 
 half_width=width/2
 half_height=height/2
@@ -91,6 +91,29 @@ buffer_value=50 #default 50 #half_height/6
 upper_value=place_x #default 350 #half_height + 50
 lower_value=upper_value-10 #default 340
 
+
+def paddle_a_bounce():
+    if (ball.xcor() < -lower_value and ball.xcor() > -upper_value) and (ball.ycor() < paddle_a.ycor() + buffer_value and ball.ycor() > paddle_a.ycor() -buffer_value):
+        ball.setx(-lower_value)
+        ball.dx *= -1
+    if paddle_a.ycor() > half_height - buffer_value: #keep paddle_a from going off edge
+        paddle_a.sety(half_height - 50)
+    if paddle_a.ycor() < -half_height + buffer_value: #keep paddle_a from going off edge
+        paddle_a.sety(-half_height + 50)
+
+def paddle_b_bounce():
+    if (ball.xcor() > lower_value and ball.xcor() < upper_value) and (ball.ycor() < paddle_b.ycor() + buffer_value and ball.ycor() > paddle_b.ycor() -buffer_value):
+        ball.setx(lower_value)
+        ball.dx *= -1
+    if paddle_b.ycor() > half_height - buffer_value: #keep paddle_b from going off edge
+        paddle_b.sety(half_height - 50)
+    if paddle_b.ycor() < -half_height + buffer_value: #keep paddle_b from going off edge
+        paddle_b.sety(-half_height + 50)
+
+def paddle_functions():
+    paddle_a_bounce()
+    paddle_b_bounce()
+
 #Main loop
 while True:
     wn.update()
@@ -122,10 +145,4 @@ while True:
         pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", 18, "normal"))
 
     #Paddles
-    if (ball.xcor() < -lower_value and ball.xcor() > -upper_value) and (ball.ycor() < paddle_a.ycor() + buffer_value and ball.ycor() > paddle_a.ycor() -buffer_value):
-        ball.setx(-lower_value)
-        ball.dx *= -1
-
-    if (ball.xcor() > lower_value and ball.xcor() < upper_value) and (ball.ycor() < paddle_b.ycor() + buffer_value and ball.ycor() > paddle_b.ycor() -buffer_value):
-        ball.setx(lower_value)
-        ball.dx *= -1
+    paddle_functions()
