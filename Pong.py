@@ -64,7 +64,7 @@ pen.goto(0, place_y)
 pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
 
 #Functions
-movement=int(half_height/8) #default ~35
+movement=int(half_height/6) #default ~35
 
 def paddle_a_up():
     y = paddle_a.ycor()
@@ -148,10 +148,10 @@ paddle_b_y = 0
 def paddle_b_player():
     global paddle_b_y
     global movement
-    if ball.ycor() > paddle_b.ycor() + .25 * buffer_value:
-        paddle_b_y += int(half_height/32)
-    if ball.ycor() < paddle_b.ycor() - .25 * buffer_value:
-        paddle_b_y -= int(half_height/32)
+    if ball.ycor() > paddle_b.ycor() + .75 * buffer_value:
+        paddle_b_y += int(half_height/36)
+    if ball.ycor() < paddle_b.ycor() - .75 * buffer_value:
+        paddle_b_y -= int(half_height/36)
     if paddle_b_y > half_height - buffer_value: #keep from glitching on top edge
         paddle_b_y = half_height - buffer_value
     if paddle_b_y < - half_height + buffer_value: #keep from glitching on bottom edge
