@@ -42,8 +42,8 @@ paddle_b.shapesize(stretch_wid=width_stretch_factor, stretch_len=len_stretch_fac
 paddle_b.penup()
 paddle_b.goto(place_x, 0)
 
-default_speed = int(half_width/65)
-default_dy = half_height/150
+default_speed = int(half_width/52) #65
+default_dy = half_height/120 #150
 
 ball = turtle.Turtle() #Ball
 ball.speed(0)
@@ -63,7 +63,7 @@ pen.hideturtle()
 pen.goto(0, place_y)
 pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
 
-#Functions
+#Paddle movement
 movement=int(half_height/6) #default ~35
 
 def paddle_a_up():
@@ -90,8 +90,8 @@ def paddle_b_down():
 wn.listen()
 wn.onkeypress(paddle_a_up, "w")
 wn.onkeypress(paddle_a_down, "s")
-wn.onkeypress(paddle_b_up, "Up")
-wn.onkeypress(paddle_b_down, "Down")
+wn.onkeypress(paddle_b_up, "Up") #Comment out if using bot
+wn.onkeypress(paddle_b_down, "Down") #Comment out if using bot
 
 #Edge Coords
 y_edge=half_height-(height/60) #default height 600;290
@@ -112,11 +112,6 @@ def paddle_a_bounce():
             if ball.dy < 0:
                 ball.dy -= (1/3) * scale_factor
         ball.dx *= -1
-    #if (ball.xcor() < -lower_value and ball.xcor() > -upper_value) and (ball.ycor() < paddle_a.ycor() + buffer_value and ball.ycor() > paddle_a.ycor() -buffer_value):
-        #if ball.dx > -(half_width/16):
-            #ball.dx -= 1 * scale_factor
-            #ball.dy += (1/3) * scale_factor
-        #ball.dx *= -1
     if paddle_a.ycor() > half_height - buffer_value: #keep paddle_a from going off top edge
         paddle_a.sety(half_height - buffer_value)
     if paddle_a.ycor() < -half_height + buffer_value: #keep paddle_a from going off bottom edge
@@ -132,12 +127,6 @@ def paddle_b_bounce():
             if ball.dy < 0:
                 ball.dy -= (1/3) * scale_factor
         ball.dx *= -1
-    #if (ball.xcor() > lower_value and ball.xcor() < upper_value) and (ball.ycor() < paddle_b.ycor() + buffer_value and ball.ycor() > paddle_b.ycor() -buffer_value):
-        #ball.setx(lower_value)
-        #if ball.dx < (half_width/16):
-            #ball.dx += 1 * scale_factor
-            #ball.dy += (4/3) * scale_factor
-        #ball.dx *= -1
     if paddle_b.ycor() > half_height - buffer_value: #keep paddle_b from going off top edge
         paddle_b.sety(half_height - buffer_value)
     if paddle_b.ycor() < -half_height + buffer_value: #keep paddle_b from going off bottom edge
@@ -149,19 +138,40 @@ def paddle_b_player():
     global paddle_b_y
     global movement
     if ball.ycor() > paddle_b.ycor() + .75 * buffer_value:
-        paddle_b_y += int(half_height/36)
+        paddle_b_y += int(half_height/42)
     if ball.ycor() < paddle_b.ycor() - .75 * buffer_value:
-        paddle_b_y -= int(half_height/36)
+        paddle_b_y -= int(half_height/42)
     if paddle_b_y > half_height - buffer_value: #keep from glitching on top edge
         paddle_b_y = half_height - buffer_value
     if paddle_b_y < - half_height + buffer_value: #keep from glitching on bottom edge
         paddle_b_y = - half_height + buffer_value
     paddle_b.goto(place_x, paddle_b_y)
 
-def paddle_functions():
+def main_functions():
+    #Edges
+    global score_a
+    global score_b
+    if ball.ycor() > y_edge: #Top bounce
+        ball.sety(y_edge)
+        ball.dy *= -1
+    if ball.ycor() < -y_edge: #Bottom bounce
+        ball.sety(-y_edge)
+        ball.dy *= -1
+    if ball.xcor() > x_edge: #Right side; w/ width 800 = 390
+        ball.dx *= -1
+        score_a += 1
+        pen.clear()
+        pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
+        reset_position()
+    if ball.xcor() < -x_edge: #Left side
+        ball.dx *= -1
+        score_b += 1
+        pen.clear()
+        pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
+        reset_position()
     paddle_a_bounce()
     paddle_b_bounce()
-    paddle_b_player()
+    paddle_b_player() #Comment out for two player
 
 def reset_position():
     ball.goto(0, 0)
@@ -184,32 +194,7 @@ while True:
     ball.setx(ball.xcor() + ball.dx) #Move ball
     ball.sety(ball.ycor() + ball.dy)
     
-    #Edges
-    if ball.ycor() > y_edge: #Top bounce
-        ball.sety(y_edge)
-        ball.dy *= -1
-
-    if ball.ycor() < -y_edge: #Bottom bounce
-        ball.sety(-y_edge)
-        ball.dy *= -1
-
-    if ball.xcor() > x_edge: #Right side; w/ width 800 = 390
-        ball.dx *= -1
-        score_a += 1
-        pen.clear()
-        pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
-        reset_position()
-
-
-    if ball.xcor() < -x_edge: #Left side
-        ball.dx *= -1
-        score_b += 1
-        pen.clear()
-        pen.write("Player A: " + str(score_a) + "  " + "Player B: " + str(score_b), align="center", font=("Courier", (18 * scale_factor), "normal"))
-        reset_position()
-
-    #Paddles
-    paddle_functions()
+    main_functions() #Paddle/bounce/edge detecting functions
 
     #End game
     if score_a > 4:
